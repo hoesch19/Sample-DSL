@@ -1,0 +1,68 @@
+grammar de.hoesch.erwin.xtext.sample.SampleDsl with org.eclipse.xtext.common.Terminals
+
+generate sampleDsl "http://www.hoesch.de/erwin/xtext/sample/SampleDsl"
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+	
+Modul:
+	'package' QualifiedName ";"
+	(imports+=Import)*
+	(method+=MethodElement)* 
+;
+
+MethodElement:
+	('public' | 'protected' | 'private') name = ID '('parameters+=Parameter')'
+	'{'
+		blocks+=Block
+	'}' 
+;
+
+
+Import:
+	'import' importedElement=QualifiedNamePlusWildCard ";"
+	
+;
+
+QualifiedNamePlusWildCard:
+	QualifiedName '.*'?
+;
+
+QualifiedName:
+	ID('.'ID)*
+;
+
+Block:
+	ReadFile | WriteFile 
+;
+
+ReadFile:
+	ReadBuffered | ReadInputStream
+;
+
+ReadBuffered:
+	"ReadBuffered" filename=ID 
+;
+
+ReadInputStream:
+	"ReadInputStream"
+;
+
+WriteFile:
+	"Susi"
+;
+
+
+// Was ist hier der 
+Parameter:
+	Type name=ID
+;
+
+Type:
+	'int' | 'double' | 'string' | 'float' | 'object' 
+;
+
+terminal DECIMAL returns ecore::EBigDecimal:
+	('0'..'9')*('.'('0'..'9')+)
+;
+
